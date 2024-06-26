@@ -1,0 +1,33 @@
+﻿@model BloggieWebProject.Models.Dominio.BlogPost
+
+@{
+	ViewData["Title"] = Model.TituloPagina;
+}
+
+<div class=" container my-5">
+	<div class="row justify-content-center">
+		<div class="col-12 col-lg-6">
+
+			@if (Model != null)
+			{
+				<h1 class="mb-3">@Model.Encabezado</h1>
+
+				<div class="d-flex justify-content-between mb-3">
+					<span class="text-secondary">@Model.Autor</span>
+					<span class="text-secondary">@Model.FechaPublicacion.ToLongDateString()</span>
+
+				</div>
+				<img src="@Model.UrlImagenDestacada" class="d-block img-fluid mb-3" />
+
+				<div class="mb-3 blog-details-content">
+					@Html.Raw(Model.Contenido)
+				</div>
+			}
+			else
+			{
+				<p>No se encontró el Post!</p>
+			}
+
+		</div>
+	</div>
+</div>

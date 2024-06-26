@@ -1,0 +1,51 @@
+﻿@model List<BloggieWebProject.Models.Dominio.Tag>
+
+@{
+    ViewData["Title"] = "Mostrar Todos Los Tags - Admin Functionality";
+}
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>@ViewData["Title"]</h1>
+    </div>
+</div>
+
+<div class="container py-5">
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>DisplayNombre</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tag in Model)
+                {
+                    <tr>
+                        <td>@tag.Id</td>
+                        <td>@tag.Nombre</td>
+                        <td>@tag.DisplayNombre</td>
+                        <td>
+                            <a asp-route-id="@tag.Id" class="btn btn-secondary" asp-area="" asp-controller="AdminTags"
+                            asp-action="Editar"
+                            >Editar</a>
+
+                        </td>
+@*                         <td>
+                            <a href="#" class="btn btn-primary btn-sm">Editar</a>
+                            <a href="#" class="btn btn-danger btn-sm">Eliminar</a>
+                        </td> *@
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>NO SE HALLO NINGÚN TAG!</p>
+    }
+</div>

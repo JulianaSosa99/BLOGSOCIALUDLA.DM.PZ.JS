@@ -1,0 +1,35 @@
+﻿@model BloggieWebProject.Models.ViewModels.AgregarTagRequest
+@{
+    ViewData["Title"] = "Agregar Tag";
+}
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>Agregar un Nuevo Tag - Admin Functionality</h1>
+    </div>
+</div>
+
+<div class="container py-5">
+    <form asp-action="Agregar" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="mb-3">
+            <label asp-for="Nombre" class="form-label">Nombre</label>
+            <input asp-for="Nombre" class="form-control" />
+            <span asp-validation-for="Nombre" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="DisplayNombre" class="form-label">Display Nombre</label>
+            <input asp-for="DisplayNombre" class="form-control" />
+            <span asp-validation-for="DisplayNombre" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-dark">Subir</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
