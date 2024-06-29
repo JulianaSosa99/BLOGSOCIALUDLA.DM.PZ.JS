@@ -4,6 +4,7 @@ using CloudinaryDotNet;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebSocialUdla.Data;
+using WebSocialUdla.Repositorio;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddScoped<ITagRepositorio, TagRepositorio>();
 builder.Services.AddScoped<IBlogPostRepositorio, BlogPostResositorio>();
 builder.Services.AddScoped<IImageRepositorio, CloudinaryImageRepositorio>();
+builder.Services.AddScoped<IUserRepositorio, UserRepositorio>();
 
 var app = builder.Build();
 

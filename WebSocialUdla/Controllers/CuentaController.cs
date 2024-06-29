@@ -50,6 +50,10 @@ namespace WebSocialUdla.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            //var model = new LoginViewModel 
+            //{ 
+            //    ReturnUrl = ReturnUrl 
+            //};
             return View();
         }
 
@@ -60,6 +64,11 @@ namespace WebSocialUdla.Controllers
                 loginViewModel.Contrasenia, false, false);
             if (signInResult != null &&  signInResult.Succeeded)
             {
+                //if (!string.IsNullOrWhiteSpace(loginViewModel.ReturnUrl))
+                //{
+                //    return Redirect(loginViewModel.ReturnUrl);
+
+                //}
                 return RedirectToAction("Index", "Home");
             }
             //Mostrar errores
