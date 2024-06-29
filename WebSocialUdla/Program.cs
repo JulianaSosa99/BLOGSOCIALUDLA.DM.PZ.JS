@@ -19,6 +19,15 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("BlogAuthDbConnec
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AuthDbContext>();
 
+builder.Services.Configure<IdentityOptions>(options => 
+{ 
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequiredLength = 6;
+
+});
+
 builder.Services.AddScoped<ITagRepositorio, TagRepositorio>();
 builder.Services.AddScoped<IBlogPostRepositorio, BlogPostResositorio>();
 builder.Services.AddScoped<IImageRepositorio, CloudinaryImageRepositorio>();
