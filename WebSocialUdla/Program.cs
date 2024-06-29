@@ -27,6 +27,12 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredLength = 6;
 
 });
+// Configurar las rutas de autenticación y autorización
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Cuenta/Login";
+    options.AccessDeniedPath = "/Cuenta/AccesoDenegado";
+});
 
 builder.Services.AddScoped<ITagRepositorio, TagRepositorio>();
 builder.Services.AddScoped<IBlogPostRepositorio, BlogPostResositorio>();

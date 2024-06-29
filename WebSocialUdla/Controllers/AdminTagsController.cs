@@ -2,12 +2,14 @@
 using BloggieWebProject.Models.Dominio;
 using BloggieWebProject.Models.ViewModels;
 using BloggieWebProject.Repositorio;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace BloggieWebProject.Controllers
 {
+    //[Authorize]
     public class AdminTagsController : Controller
     {
         public readonly ITagRepositorio tagRepositorio;
@@ -16,10 +18,9 @@ namespace BloggieWebProject.Controllers
         {
            this.tagRepositorio = tagRepositorio;
         }
-        
 
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult Agregar()
         {
@@ -27,7 +28,7 @@ namespace BloggieWebProject.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ActionName("Agregar")]
         public async Task<IActionResult> Agregar(AgregarTagRequest agregarTagRequest)
         {
             if (ModelState.IsValid)

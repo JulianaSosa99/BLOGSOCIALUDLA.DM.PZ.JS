@@ -54,11 +54,11 @@ namespace WebSocialUdla.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewmodel loginViewmodel)
+        public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
-            var signInResult = await signInManager.PasswordSignInAsync(loginViewmodel.Usuario,
-                loginViewmodel.Contrasenia, false, false);
-            if (signInResult != null & signInResult.Succeeded)
+            var signInResult = await signInManager.PasswordSignInAsync(loginViewModel.Usuario,
+                loginViewModel.Contrasenia, false, false);
+            if (signInResult != null &&  signInResult.Succeeded)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -72,6 +72,12 @@ namespace WebSocialUdla.Controllers
             await signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-    
+
+
+        [HttpGet]
+        public IActionResult AccesoDenegado() 
+        { 
+            return View();
+        }
     }
 }
