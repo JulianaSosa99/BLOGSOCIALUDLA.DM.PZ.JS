@@ -26,6 +26,7 @@
                         <th>Id</th>
                         <th>Usuario</th>
                         <th>Email</th>
+                        <th> </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -35,6 +36,13 @@
                             <td>@user.Id</td>
                             <td>@user.Usuario</td>
                             <td>@user.Email</td>
+                            <td>
+                                <form method="post" 
+                                    asp-controller="AdminUsers" 
+                                    asp-action="Eliminar" asp-route-id="@user.Id">
+                                    <button class="btn btn-danger" type="submit">Eliminar</button>
+                                </form>
+                            </td>
                         </tr>
                     }
                 </tbody>

@@ -72,5 +72,22 @@ namespace WebSocialUdla.Controllers
             }
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Eliminar(Guid id)
+        {
+            var user =await userManager.FindByIdAsync(id.ToString());
+            if (user is not null) 
+            { 
+               var identityResult = await userManager.DeleteAsync(user);
+                if (identityResult is not null && identityResult.Succeeded)
+                {
+                    return RedirectToAction("Listar", "AdminUsers");
+                }
+            }
+
+
+            return View();
+        }
     }
 }
