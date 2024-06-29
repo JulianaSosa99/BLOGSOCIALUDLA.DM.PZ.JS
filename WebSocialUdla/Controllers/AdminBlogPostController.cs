@@ -5,9 +5,11 @@ using BloggieWebProject.Models.ViewModels;
 using System.Linq;
 using System.Threading.Tasks;
 using BloggieWebProject.Models.Dominio;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BloggieWebProject.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminBlogPostController : Controller
     {
         private readonly ITagRepositorio tagRepositorio;
@@ -81,7 +83,7 @@ namespace BloggieWebProject.Controllers
         }
 
 
-        //Desde aqui cambie Pris
+        
         [HttpGet]
         public async Task<IActionResult> Editar(Guid id)
         {

@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace BloggieWebProject.Controllers
 {
-    //[Authorize]
+    [Authorize(Roles = "Admin")]
     public class AdminTagsController : Controller
     {
         public readonly ITagRepositorio tagRepositorio;
@@ -20,7 +20,7 @@ namespace BloggieWebProject.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
+       
         [HttpGet]
         public IActionResult Agregar()
         {
@@ -65,7 +65,6 @@ namespace BloggieWebProject.Controllers
 
             return View(tags);
         }
-
 
         [HttpGet]
         public async Task<IActionResult> Editar(Guid id)
@@ -114,6 +113,9 @@ namespace BloggieWebProject.Controllers
 
 
         }
+
+        [HttpPost]
+
         public async Task<IActionResult> Eliminar(EditarTagRequest editarTagRequest)
         {
             {
