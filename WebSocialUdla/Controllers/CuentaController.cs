@@ -24,25 +24,30 @@ namespace WebSocialUdla.Controllers
         [HttpPost]
         public async Task<IActionResult>Registrar(RegistrarViewModel registrarViewModel)
         {
-            var identityUser = new IdentityUser
+            if (ModelState.IsValid) 
             {
-                UserName = registrarViewModel.Usuario,
-                Email = registrarViewModel.Email,
+                var identityUser = new IdentityUser
+                {
+                    UserName = registrarViewModel.Usuario,
+                    Email = registrarViewModel.Email,
 
-            };
+                };
 
-            var identityResult = await userManager.CreateAsync(identityUser, registrarViewModel.Contrasenia);
+                var identityResult = await userManager.CreateAsync(identityUser, registrarViewModel.Contrasenia);
 
-            if (identityResult.Succeeded) 
-            {
-                var roleIdentityResult = await userManager.AddToRoleAsync(identityUser, "User");
-                
-                if (roleIdentityResult.Succeeded)
-                { 
-                    return RedirectToAction("Registrar");
+                if (identityResult.Succeeded)
+                {
+                    var roleIdentityResult = await userManager.AddToRoleAsync(identityUser, "User");
+
+                    if (roleIdentityResult.Succeeded)
+                    {
+                        return RedirectToAction("Registrar");
+                    }
+
                 }
-                
             }
+
+            
             return View();
         }
 

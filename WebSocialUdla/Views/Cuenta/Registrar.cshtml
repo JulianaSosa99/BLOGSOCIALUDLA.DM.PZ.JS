@@ -6,22 +6,27 @@
     <div class="row justify-content-center">
         <div class="col-12 col-lg-6">
             <h1 class="mt-3 mb-3 h3"> 
-                Registrar
+                Registrarse
             </h1>
             <form method="post">
                 <div class="mb-3">
                     <label class="form-label">Nombre de Usuario</label>
-                    <input type="text" id="username" class="form-control" asp-for="Usuario" />
+                    <input type="text" id="username" class="form-control" asp-for="Usuario" required/>
+                    <span class="text-danger" asp-validation-for="Usuario"></span>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Email de Usuario</label>
-                    <input type="email" id="email" class="form-control" asp-for="Email" />
+                    <input type="email" id="email" class="form-control" asp-for="Email" required />
+                    <span class="text-danger" asp-validation-for="Email"></span>
+
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Contraseña</label>
-                    <input type="password" id="password" class="form-control" asp-for="Contrasenia"/>
+                    <input type="password" id="password" class="form-control" asp-for="Contrasenia" required minlength="6"/>
+                    <span class="text-danger" asp-validation-for="Contrasenia"></span>
+
                 </div>
 
                 <div class="mb-3">
