@@ -65,6 +65,10 @@ namespace WebSocialUdla.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
+            if (!ModelState.IsValid) 
+            {
+                return View();
+            }
             var signInResult = await signInManager.PasswordSignInAsync(loginViewModel.Usuario,
                 loginViewModel.Contrasenia, false, false);
             if (signInResult != null &&  signInResult.Succeeded)
