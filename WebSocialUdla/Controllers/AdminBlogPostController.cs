@@ -38,38 +38,42 @@ namespace BloggieWebProject.Controllers
         [HttpPost]
         public async Task<IActionResult> Agregar(AgregarBlogPostRequest agregarBlogPostRequest)
         {
-            // Map view model to domain model
-            var blogPost = new BlogPost
-            {
-                Encabezado = agregarBlogPostRequest.Encabezado,
-                TituloPagina = agregarBlogPostRequest.TituloPagina,
-                Contenido = agregarBlogPostRequest.Contenido,
-                DescripcionCorta = agregarBlogPostRequest.DescripcionCorta,
-                UrlImagenDestacada = agregarBlogPostRequest.UrlImagenDestacada,
-                ManejadorUrl = agregarBlogPostRequest.ManejadorUrl,
-                FechaPublicacion = agregarBlogPostRequest.FechaPublicacion,
-                Autor = agregarBlogPostRequest.Autor,
-                Visible = agregarBlogPostRequest.Visible,
-            };
-
-            // Map Tags from selected tags
-            var tagSeleccionados = new List<Tag>();
-            foreach (var tagSeleccionadosId in agregarBlogPostRequest.TagSeleccionado)
-            {
-                var selectedTagIdAsGuid = Guid.Parse(tagSeleccionadosId);
-                var existingTag = await tagRepositorio.GetAsync(selectedTagIdAsGuid);
-
-                if (existingTag != null)
+            
+                // Map view model to domain model
+                var blogPost = new BlogPost
                 {
-                    tagSeleccionados.Add(existingTag);
+                    Encabezado = agregarBlogPostRequest.Encabezado,
+                    TituloPagina = agregarBlogPostRequest.TituloPagina,
+                    Contenido = agregarBlogPostRequest.Contenido,
+                    DescripcionCorta = agregarBlogPostRequest.DescripcionCorta,
+                    UrlImagenDestacada = agregarBlogPostRequest.UrlImagenDestacada,
+                    ManejadorUrl = agregarBlogPostRequest.ManejadorUrl,
+                    FechaPublicacion = agregarBlogPostRequest.FechaPublicacion,
+                    Autor = agregarBlogPostRequest.Autor,
+                    Visible = agregarBlogPostRequest.Visible,
+                };
+
+                // Map Tags from selected tags
+                var tagSeleccionados = new List<Tag>();
+                foreach (var tagSeleccionadosId in agregarBlogPostRequest.TagSeleccionado)
+                {
+                    var selectedTagIdAsGuid = Guid.Parse(tagSeleccionadosId);
+                    var existingTag = await tagRepositorio.GetAsync(selectedTagIdAsGuid);
+
+                    if (existingTag != null)
+                    {
+                        tagSeleccionados.Add(existingTag);
+                    }
                 }
-            }
 
-            blogPost.Tags = tagSeleccionados;
+                blogPost.Tags = tagSeleccionados;
 
-            await blogPostRepositorio.AddAsync(blogPost);
+                await blogPostRepositorio.AddAsync(blogPost);
+                return RedirectToAction("Lista");
+            
+            
 
-            return RedirectToAction("Lista");
+            
         }
         [HttpGet]
         public async Task<IActionResult> Lista()

@@ -13,11 +13,15 @@
     <form method="post">
         <div class="mb-3">
             <label class="form-label">Encabezado</label>
-            <input type="text" class="form-control" id="encabezado" asp-for="Encabezado" />
+            <input type="text" class="form-control" id="encabezado" asp-for="Encabezado" required/>
+            <span asp-validation-for="Encabezado" class="text-danger"></span>
+
         </div>
         <div class="mb-3">
             <label class="form-label">Título de Página</label>
-            <input type="text" class="form-control" id="tituloPagina" asp-for="TituloPagina" />
+            <input type="text" class="form-control" id="tituloPagina" asp-for="TituloPagina" required/>
+            <span asp-validation-for="TituloPagina" class="text-danger"></span>
+
         </div>
 
 
@@ -26,38 +30,46 @@
         <div class="mb-3">
             <label class="form-label">Contenido</label>
             <textarea class="form-control" id="contenido" asp-for="Contenido"></textarea>
+            <span asp-validation-for="Contenido" class="text-danger"></span>
+
         </div>
-
-
-
-
-
-
 
 
         <div class="mb-3">
             <label class="form-label">Descripción Corta</label>
-            <input type="text" class="form-control" id="descripcionCorta" asp-for="DescripcionCorta" />
+            <input type="text" class="form-control" id="descripcionCorta" asp-for="DescripcionCorta" required/>
+            <span asp-validation-for="DescripcionCorta" class="text-danger"></span>
+
         </div>
         <div class="mb-3">
             <label class="form-label">URL de Imagen Destacada</label>
-            <input type="text" class="form-control" id="urlImagenDestacada" asp-for="UrlImagenDestacada" />
+            <input type="text" class="form-control" id="urlImagenDestacada" asp-for="UrlImagenDestacada" required/>
+            <span asp-validation-for="UrlImagenDestacada" class="text-danger"></span>
+
         </div>
         <div class="mb-3">
             <label class="form-label">Manejador URL</label>
-            <input type="text" class="form-control" id="manejadorUrl" asp-for="ManejadorUrl" />
+            <input type="text" class="form-control" id="manejadorUrl" asp-for="ManejadorUrl" required/>
+            <span asp-validation-for="ManejadorUrl" class="text-danger"></span>
+
         </div>
         <div class="mb-3">
             <label class="form-label">Fecha de Publicación</label>
-            <input type="date" class="form-control" id="fechaPublicacion" asp-for="FechaPublicacion" />
+            <input type="date" class="form-control" id="fechaPublicacion" asp-for="FechaPublicacion" required/>
+            <span asp-validation-for="FechaPublicacion" class="text-danger"></span>
+
         </div>
         <div class="mb-3">
             <label class="form-label">Autor</label>
-            <input type="text" class="form-control" id="autor" asp-for="Autor" />
+            <input type="text" class="form-control" id="autor" asp-for="Autor" required/>
+            <span asp-validation-for="Autor" class="text-danger"></span>
+
         </div>
         <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="visible" asp-for="Visible" />
             <label class="form-check-label" for="visible">Visible</label>
+          
+
         </div>
 
         <div class="mb-3">
@@ -65,11 +77,13 @@
             <select class="form-control" 
                         id="tagSeleccionado" 
                         asp-for="TagSeleccionado" 
-                        asp-items="@Model.Tags" 
+                        asp-items="@Model.Tags"
                
                 >
                 <option value="">Selecciona una etiqueta</option>
             </select>
+           
+
         </div>
         <button type="submit" class="btn btn-primary">Agregar</button>
     </form>
