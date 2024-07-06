@@ -4,6 +4,7 @@ using BloggieWebProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BloggieWebProject.Migrations
 {
     [DbContext(typeof(BlogDbContext))]
-    partial class BlogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240705175411_Aniadiendo funcionalidad de likes")]
+    partial class Aniadiendofuncionalidaddelikes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,32 +104,6 @@ namespace BloggieWebProject.Migrations
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("WebSocialUdla.Models.Dominio.BlogPostComment", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BlogPostId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("FechaAgregado")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BlogPostId");
-
-                    b.ToTable("BlogPostComment");
-                });
-
             modelBuilder.Entity("WebSocialUdla.Models.Dominio.BlogPostLike", b =>
                 {
                     b.Property<Guid>("Id")
@@ -161,15 +138,6 @@ namespace BloggieWebProject.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WebSocialUdla.Models.Dominio.BlogPostComment", b =>
-                {
-                    b.HasOne("BloggieWebProject.Models.Dominio.BlogPost", null)
-                        .WithMany("Comments")
-                        .HasForeignKey("BlogPostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("WebSocialUdla.Models.Dominio.BlogPostLike", b =>
                 {
                     b.HasOne("BloggieWebProject.Models.Dominio.BlogPost", null)
@@ -181,8 +149,6 @@ namespace BloggieWebProject.Migrations
 
             modelBuilder.Entity("BloggieWebProject.Models.Dominio.BlogPost", b =>
                 {
-                    b.Navigation("Comments");
-
                     b.Navigation("Likes");
                 });
 #pragma warning restore 612, 618

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebSocialUdla.Models.Dominio;
 
 namespace BloggieWebProject.Models.Dominio
 {
@@ -33,5 +34,8 @@ namespace BloggieWebProject.Models.Dominio
 
         [Required]
         public ICollection<Tag> Tags { get; set; }  //Un post tendrá una colección de tags
-    }
+
+        public ICollection<BlogPostLike> Likes { get; set; }
+		public ICollection<BlogPostComment> Comments { get; set; }
+	}
 }
