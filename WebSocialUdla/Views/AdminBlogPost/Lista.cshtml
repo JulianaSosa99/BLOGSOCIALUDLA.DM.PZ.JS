@@ -1,7 +1,4 @@
-﻿@model List<BloggieWebProject.Models.Dominio.BlogPost>
-
-@{
-}
+﻿@model List<WebSocialUdla.Models.Dominio.BlogNodo>
 
 <div class="bg-secondary bg-opacity-10 py-2">
     <div class="container">
@@ -15,10 +12,10 @@
         <table class="table">
             <thead>
                 <tr>
-                    <td>Id</td>
-                    <td>Encabezado</td>
-                    <td>Tags</td>
-                    <td> </td>
+                    <th>Id</th>
+                    <th>Encabezado</th>
+                    <th>Tags</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -38,8 +35,8 @@
                         <td>
                             <a asp-area=""
                                asp-controller="AdminBlogPost"
-                                asp-action="Editar"
-                                asp-route-id="@blogPost.Id">
+                               asp-action="Editar"
+                               asp-route-id="@blogPost.Id">
                                 Editar
                             </a>
                         </td>

@@ -1,141 +1,121 @@
-﻿using BloggieWebProject.Data;
-using BloggieWebProject.Models.Dominio;
-using BloggieWebProject.Models.ViewModels;
+﻿using BloggieWebProject.Models.ViewModels;
 using BloggieWebProject.Repositorio;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using WebSocialUdla.Dominio.DTOs;
+using WebSocialUdla.Servicios;
 
 namespace BloggieWebProject.Controllers
 {
-    [Authorize(Roles = "Admin")]
-    public class AdminTagsController : Controller
-    {
-        public readonly ITagRepositorio tagRepositorio;
+	[Authorize(Roles = "Admin")]
+	public class AdminTagsController : Controller
+	{
+		private readonly ITagService _tagService;
 
-        public AdminTagsController(ITagRepositorio tagRepositorio )
-        {
-           this.tagRepositorio = tagRepositorio;
-        }
+		public AdminTagsController(ITagService tagService)
+		{
+			_tagService = tagService;
+		}
 
+		[HttpGet]
+		public IActionResult Agregar()
+		{
+			return View();
+		}
 
-       
-        [HttpGet]
-        public IActionResult Agregar()
-        {
-            return View();
-        }
+		[HttpPost]
+		[ActionName("Agregar")]
+		public async Task<IActionResult> Agregar(AgregarTagRequest agregarTagRequest)
+		{
+			if (ModelState.IsValid)
+			{
+				var tagDto = new TagDto
+				{
+					Nombre = agregarTagRequest.Nombre,
+					DisplayNombre = agregarTagRequest.DisplayNombre
+				};
 
-        [HttpPost]
-        [ActionName("Agregar")]
-        public async Task<IActionResult> Agregar(AgregarTagRequest agregarTagRequest)
-        {
-            if (ModelState.IsValid)
-            {
-                var tag = new Tag
-                {
-                    Nombre = agregarTagRequest.Nombre,
-                    DisplayNombre = agregarTagRequest.DisplayNombre
-                };
-                
+				var tag = await _tagService.CreateTagAsync(tagDto);
 
-                await tagRepositorio.AddAsync(tag);
-             
+				if (tag != null)
+				{
+					return RedirectToAction("Listar");
+				}
+			}
 
-                //await _blogDbContext.Tags.AddAsync(tag);
-                //await _blogDbContext.SaveChangesAsync() ;
+			return View(agregarTagRequest);
+		}
 
-                //return RedirectToAction(nameof(Agregar));
-                return RedirectToAction("Listar");
-            }
+		[HttpGet]
+		[ActionName("Listar")]
+		public async Task<IActionResult> Listar()
+		{
+			var tags = await _tagService.GetAllTagsAsync();
+			return View(tags);
+		}
 
-            //return View(agregarTagRequest);
-            return View(agregarTagRequest);
-        }
+		[HttpGet]
+		public async Task<IActionResult> Editar(Guid id)
+		{
+			var tag = await _tagService.GetTagAsync(id);
 
-        [HttpGet]
-        [ActionName("Listar")]
-        public async Task<IActionResult> Listar()
-        {
-            //Usar DbContext para leer los tags
-            //var tags = await _blogDbContext.Tags.ToListAsync();
-            var tags = await tagRepositorio.GetAllAsync();
+			if (tag != null)
+			{
+				var editarTagRequest = new EditarTagRequest
+				{
+					Id = tag.Id,
+					Nombre = tag.Nombre,
+					DisplayNombre = tag.DisplayNombre
+				};
+				return View(editarTagRequest);
+			}
 
+			return View(null);
+		}
 
-            return View(tags);
-        }
+		[HttpPost]
+		public async Task<IActionResult> Editar(EditarTagRequest editarTagRequest)
+		{
+			var tagDto = new TagDto
+			{
+				Id = editarTagRequest.Id,
+				Nombre = editarTagRequest.Nombre,
+				DisplayNombre = editarTagRequest.DisplayNombre
+			};
 
-        [HttpGet]
-        public async Task<IActionResult> Editar(Guid id)
-        //    //primer metodoo
-        //    // var tag = _blogDbContext.Tags.Find(id);
+			var tagActualizado = await _tagService.UpdateTagAsync(editarTagRequest.Id, tagDto);
 
-        //    //segundo metodo
-        {
-            var tag = await tagRepositorio.GetAsync(id);  
+			if (tagActualizado != null)
+			{
+				return RedirectToAction("Listar");
+			}
+			else
+			{
+				// Mostrar notificación de fallo
+			}
 
-            if (tag != null)
-            {
-                var editarTagRequest = new EditarTagRequest
-                {
-                    Id = tag.Id,
-                    Nombre = tag.Nombre,
-                    DisplayNombre = tag.DisplayNombre
-                };
-                return View(editarTagRequest);
-            }
+			return RedirectToAction("Editar", new { id = editarTagRequest.Id });
+		}
 
-            return View(null);
-        }
+		[HttpPost]
+		public async Task<IActionResult> Eliminar(Guid id)
+		{
+			var result = await _tagService.DeleteTagAsync(id);
 
-        [HttpPost]
-        public async Task<IActionResult> Editar(EditarTagRequest editarTagRequest)
-        {
-            var tag = new Tag
-            {
-                Id = editarTagRequest.Id,
-                Nombre = editarTagRequest.Nombre,
-                DisplayNombre = editarTagRequest.DisplayNombre
-
-            };
-            var tagActualizado= await  tagRepositorio.UpdateAsync(tag);
-            if (tagActualizado != null)
-            {
-                //mensaje correcto
-                return RedirectToAction("Listar");
-            }
-            else {
-                //Mostrar notificación de fallo
-              
-            }
-            return RedirectToAction("Editar", new { id = editarTagRequest.Id });
-
-
-        }
-
-        [HttpPost]
-
-        public async Task<IActionResult> Eliminar(EditarTagRequest editarTagRequest)
-        {
-            {
-
-                var borrarTag = await tagRepositorio.DeleteAsync(editarTagRequest.Id);
-              
-                if (borrarTag != null) {
-
-                    //mostrar noficacion de exito
-                    return RedirectToAction("Listar");
-                
-                }
-                //mostrar notificacion de error
-                return RedirectToAction("Editar",new { id = editarTagRequest.Id });
-
-            };
-            //return RedirectToAction(nameof(Index));
-
-
-        }
-    }
-
+			if (result)
+			{
+				// Mostrar notificación de éxito
+				return RedirectToAction("Listar");
+			}
+			else
+			{
+				// Mostrar notificación de error
+				return RedirectToAction("Editar", new { id });
+			}
+		}
+	}
 }

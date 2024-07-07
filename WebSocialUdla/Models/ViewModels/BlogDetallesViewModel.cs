@@ -1,6 +1,5 @@
-﻿using BloggieWebProject.Models.Dominio;
+﻿using WebSocialUdla.Dominio.Models;
 using System.ComponentModel.DataAnnotations;
-using WebSocialUdla.Models.Dominio;
 
 namespace WebSocialUdla.Models.ViewModels
 {

@@ -1,52 +1,54 @@
-using BloggieWebProject.Models;
-using BloggieWebProject.Models.ViewModels;
-using BloggieWebProject.Repositorio;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using WebSocialUdla.Dominio.DTOs;
+using WebSocialUdla.Services;
+using WebSocialUdla.Models.ViewModels;
+using WebSocialUdla.Models;
+using WebSocialUdla.Servicios;
+using BloggieWebProject.Models.ViewModels;
+using BloggieWebProject.Models;
 
-namespace BloggieWebProject.Controllers
+namespace WebSocialUdla.Controllers
 {
-    public class HomeController : Controller
-    {
-        private readonly ILogger<HomeController> _logger;
-        private readonly IBlogPostRepositorio blogPostRepositorio;
-		private readonly ITagRepositorio tagRepositorio;
+	public class HomeController : Controller
+	{
+		private readonly IBlogFicaService _blogFicaService;
+		private readonly IBlogNodoService _blogNodoService;
+		private readonly ITagService _tagService;
 
-		public HomeController(ILogger<HomeController> logger, 
-            IBlogPostRepositorio blogPostRepositorio,
-            ITagRepositorio tagRepositorio
-            )
-        {
-            _logger = logger;
-            this.blogPostRepositorio = blogPostRepositorio;
-			this.tagRepositorio = tagRepositorio;
+		public HomeController(IBlogFicaService blogFicaService, IBlogNodoService blogNodoService, ITagService tagService)
+		{
+			_blogFicaService = blogFicaService;
+			_blogNodoService = blogNodoService;
+			_tagService = tagService;
 		}
 
-        public async Task<IActionResult> Index()
-        {
-            //tener todos los blogs
-            var blogPosts= await blogPostRepositorio.GetAllAsync();
+		public async Task<IActionResult> Index()
+		{
+			var blogPostsFica = await _blogFicaService.GetAllBlogsAsync();
+			var blogPostsNodo = await _blogNodoService.GetAllBlogsAsync();
+			var tags = await _tagService.GetAllTagsAsync();
 
-            //tener todos los tags
-            var tags = await tagRepositorio.GetAllAsync();
-            var model = new HomeViewModel
-            {
-                BlogPosts = blogPosts,
-                Tags = tags
-            };
+			var model = new HomeViewModel
+			{
+				BlogPostsFica = (IEnumerable<Dominio.Models.BlogFica>)blogPostsFica,
+				BlogPostsNodo = (IEnumerable<Dominio.Models.BlogNodo>)blogPostsNodo,
+				Tags = (IEnumerable<Dominio.Models.Tag>)tags
+			};
 
-            return View(model);
-        }
+			return View(model);
+		}
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+		public IActionResult Privacy()
+		{
+			return View();
+		}
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-    }
+		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+		public IActionResult Error()
+		{
+			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+		}
+	}
 }

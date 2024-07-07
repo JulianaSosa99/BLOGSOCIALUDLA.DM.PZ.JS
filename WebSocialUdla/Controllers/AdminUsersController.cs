@@ -1,93 +1,90 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using WebSocialUdla.Dominio.DTOs;
+using BloggieWebProject.Models.ViewModels;
+using WebSocialUdla.Servicios;
 using WebSocialUdla.Models.ViewModels;
-using WebSocialUdla.Repositorio;
+using BloggieWebProject.Servicios;
 
-namespace WebSocialUdla.Controllers
+namespace BloggieWebProject.Controllers
 {
-    [Authorize(Roles = "Admin")]
-    public class AdminUsersController : Controller
-    {
-        private readonly IUserRepositorio userRepositorio;
-        private readonly UserManager<IdentityUser> userManager;
+	[Authorize(Roles = "Admin")]
+	public class AdminUsersController : Controller
+	{
+		private readonly IUserService _userService;
 
-        public AdminUsersController(IUserRepositorio userRepositorio,
-            UserManager<IdentityUser> userManager)
-        {
-            this.userRepositorio = userRepositorio;
-            this.userManager = userManager;
-        }
+		public AdminUsersController(IUserService userService)
+		{
+			_userService = userService;
+		}
 
-        [HttpGet]
-        public async Task<IActionResult> Listar()
-        {
-            var users = await userRepositorio.GetAll();
-            var usersViewmodel = new UserViewModel();
-            usersViewmodel.Users = new List<User>();
+		[HttpGet]
+		public async Task<IActionResult> Listar()
+		{
+			var users = await _userService.GetAllUsersAsync();
 
-            foreach (var user in users) 
-            {
-                usersViewmodel.Users.Add(new Models.ViewModels.User
-                { 
-                        Id = Guid.Parse( user.Id),
-                        Usuario= user.UserName,
-                        Email = user.Email
-                });
-            }
+			var usersViewModel = new UserViewModel
+			{
+				Users = new List<UserDto>()
+			};
 
-            return View(usersViewmodel);
-        }
+			foreach (var user in users)
+			{
+				usersViewModel.Users.Add(new UserDto
+				{
+					Username = user.Username,
+					CorreoElectronico = user.CorreoElectronico
+				});
+			}
 
-        [HttpPost]
-        public async Task<IActionResult> Listar(UserViewModel request)
-        {
-            var identityUser = new IdentityUser
-            {
-                UserName = request.Usuario,
-                Email = request.Email
-            };
+			return View(usersViewModel);
+		}
 
-            var identityResult = 
-                await userManager.CreateAsync(identityUser, request.Contrasenia);
-            if (identityResult is not null) 
-            {
-                if (identityResult.Succeeded) 
-                { 
-                    //Asignar roles a este usuario
-                    var roles = new List<string> { "User"};
+		[HttpPost]
+		public async Task<IActionResult> Listar(UserViewModel request)
+		{
+			var userDto = new UserDto
+			{
+				Username = request.Usuario,
+				Password = request.Contrasenia, // Asegúrate de manejar correctamente las contraseñas en tu aplicación
+				Nombres = request.Nombres,
+				Apellidos = request.Apellidos,
+				CorreoElectronico = request.Email
+			};
 
-                    if (request.AdminRoleCheckBox)
-                    {
-                        roles.Add("Admin");
-                    }
-                    identityResult= await userManager.AddToRolesAsync(identityUser, roles);
+			var user = await _userService.CreateUserAsync(userDto);
 
-                    if (identityResult is not null && identityResult.Succeeded) 
-                    {
-                        return RedirectToAction("Listar", "AdminUsers");
-                    }
-                
-                }
-            }
-            return View();
-        }
+			if (user != null)
+			{
+				var roles = new List<string> { "User" };
 
-        [HttpPost]
-        public async Task<IActionResult> Eliminar(Guid id)
-        {
-            var user =await userManager.FindByIdAsync(id.ToString());
-            if (user is not null) 
-            { 
-               var identityResult = await userManager.DeleteAsync(user);
-                if (identityResult is not null && identityResult.Succeeded)
-                {
-                    return RedirectToAction("Listar", "AdminUsers");
-                }
-            }
+				if (request.AdminRoleCheckBox)
+				{
+					roles.Add("Admin");
+				}
 
+				await _userService.AssignRolesAsync(user.Id, roles); // Método ficticio, debes implementarlo en el servicio
 
-            return View();
-        }
-    }
+				return RedirectToAction("Listar");
+			}
+
+			return View(request);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Eliminar(Guid id)
+		{
+			var result = await _userService.DeleteUserAsync(id);
+
+			if (result)
+			{
+				return RedirectToAction("Listar");
+			}
+
+			return View();
+		}
+	}
 }
